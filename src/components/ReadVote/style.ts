@@ -126,6 +126,7 @@ export const ImageContainer = styled.div`
   min-height: 200px;
   position: relative;
 `;
+
 export const ImageVoteCount = styled.div`
   position: absolute;
   top: 10%;
@@ -136,4 +137,8 @@ export const ImageVoteCount = styled.div`
   background-color: #4285f4;
   opacity: 90%;
   border-radius: 10px;
+`;
+
+export const AnswerCard = styled.div`
+  border: 1px solid red;
 `;
