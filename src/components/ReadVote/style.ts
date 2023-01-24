@@ -126,3 +126,14 @@ export const ImageContainer = styled.div`
   min-height: 200px;
   position: relative;
 `;
+export const ImageVoteCount = styled.div`
+  position: absolute;
+  top: 10%;
+  left: 80%;
+  font-size: 1rem;
+  color: white;
+  padding: 0.5rem 0.8rem;
+  background-color: #4285f4;
+  opacity: 90%;
+  border-radius: 10px;
+`;
