@@ -42,7 +42,7 @@ const ReadVote = () => {
     }
   }, [data?.voteType]);
 
-  const handleSelectedBtn = useCallback((array: number[]) => {
+  const handleSelectedBtn = useCallback((array: any) => {
     setSelectedBtn(array);
   }, []);
   //api요청하는 곳
