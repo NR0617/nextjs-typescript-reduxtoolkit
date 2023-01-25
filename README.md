@@ -1,6 +1,11 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+<<<<<<< HEAD
 ## Getting Started
+=======
+UX/UI디자이너 1명, BE 3명, FE 3명이 제작중,  
+가장 최신에 추가된 default branch가 최종 버전입니다
+>>>>>>> 7ef2da67c7b390c8af0eee1f6561507d577157a9
 
 First, run the development server:
 
@@ -10,6 +15,7 @@ npm run dev
 yarn dev
 ```
 
+<<<<<<< HEAD
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
@@ -34,3 +40,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+=======
+## 목표 완성일 
+
+2023.02
+>>>>>>> 7ef2da67c7b390c8af0eee1f6561507d577157a9
