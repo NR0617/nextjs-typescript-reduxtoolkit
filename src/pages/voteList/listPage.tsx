@@ -47,7 +47,7 @@ const ListPage = ({ data, totalPage, setCondition, setPage }: propsArray) => {
         })}
       </S.ButtonWrapper>
       {data?.map((el, idx) => {
-        return <CardItem key={idx} data={el} />;
+        return <CardItem key={el.id} data={el} />;
       })}
       <S.pageNum>
         {page.map((el) => (
