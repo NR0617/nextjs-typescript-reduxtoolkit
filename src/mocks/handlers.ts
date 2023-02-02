@@ -1,16 +1,44 @@
 import { AxiosRequestConfig } from 'axios';
-import { PathParams, rest, RestRequest } from 'msw';
-import { mockUsers, mockVote } from './data';
+import { DefaultBodyType, PathParams, rest, RestRequest } from 'msw';
+import {
+  mockUsers,
+  mockVote,
+  mockVoteList,
+  mockSortedInProgress,
+  mockSortedTerminate,
+  mockReadVoteText1,
+  mockReadVoteText2,
+  mockReadVoteText3,
+  mockReadVoteText4,
+  mockReadVoteImage,
+  mockAnswer,
+} from './data';
 
 let MockUsers = [...mockUsers];
 let MockVote = [...mockVote];
+let MockVoteList = [...mockVoteList];
+let MockSortedInProgress = [...mockSortedInProgress];
+let MockSortedTerminate = [...mockSortedTerminate];
+let MockReadVoteText1 = [...mockReadVoteText1];
+let MockReadVoteText2 = [...mockReadVoteText2];
+let MockReadVoteText3 = [...mockReadVoteText3];
+let MockReadVoteText4 = [...mockReadVoteText4];
+let MockReadVoteImage = [...mockReadVoteImage];
+let MockAnswer = [...mockAnswer];
 
 console.log(MockUsers);
 console.log(MockVote);
+
 interface UserInfo {
   email?: string;
   password?: string;
   nickname?: string;
+}
+
+interface VoteList {
+  totalPage?: number;
+  currentPage?: number;
+  data?: Object[];
 }
 
 export const handlers = [
@@ -55,12 +83,12 @@ export const handlers = [
     const searchParam = new URLSearchParams(req.url.searchParams);
     const nick = searchParam.get('nickname');
     const existNick = MockUsers.find((el) => {
-      return nick === el.nickName;
+      return nick === el.nickname;
     });
     if (nick && existNick) {
       return res(
         ctx.delay(),
-        ctx.status(200),
+        ctx.status(400),
         ctx.json('중복된 닉네임 입니다.'),
       );
     } else if (nick && !existNick) {
@@ -71,13 +99,100 @@ export const handlers = [
       );
     }
   }),
+  // 회원가입 등록!
+  rest.post('/api/members', (req, res, ctx) => {
+    let id = MockUsers.length + 1;
+    const newUser: any = req.body;
+    console.log('MSW 회원등록 post -> req.body : ', req.body);
+    console.log('MSW ->회원가입등록  post -> req ', req);
+    const result = { id, ...newUser };
+    console.log('result : ', result);
+    MockUsers.push(result);
+    console.log('MockUsers : ', MockUsers);
+
+    return res(ctx.delay(), ctx.status(200), ctx.json(MockUsers));
+  }),
+  // 로그인 // ctx.set('key', value) -> 응답헤더에 넣어서 보내주는 메서드
+  rest.post<UserInfo>('/api/auth/login', (req, res, ctx) => {
+    const { email, password } = req.body;
+    const findUser = MockUsers.find((user) => {
+      return user.email === email;
+    });
+    if (findUser && findUser.password === password) {
+      const accesstoken: any = 'I am Bearer accesstoken.';
+      const refreshtoken: any = 'I am refreshtoken';
+      const Authorization: any = { accesstoken, refreshtoken };
+      console.log('MSW Login post 요청 Authorization : ', Authorization);
+      return res(
+        ctx.delay(),
+        ctx.status(200),
+        ctx.json('로그인 성공'),
+        ctx.set('Authorization', Authorization),
+      );
+    } else if (findUser && findUser.password !== password) {
+      return res(ctx.delay(), ctx.status(400), ctx.json('비밀번호 불일치.'));
+    } else if (!findUser) {
+      return res(
+        ctx.delay(),
+        ctx.status(400),
+        ctx.json('존재하지 않는 이메일.'),
+      );
+    }
+  }),
   // Vote 투표 작성 보내기
   rest.post('/api/topics', (req, res, ctx) => {
-    const request = req.body;
+    const voteData:any = req.body;
+    console.log('msw 내부 요청 받았음!');
+    console.log('voteData: ', voteData);
+    console.log('req', req);
+    MockVote.push(voteData);
+
+    return res(ctx.delay(), ctx.status(200), ctx.json(MockVote));
+  }),
+  rest.get<VoteList>('/api/topics/:condition', (req, res, ctx) => {
+    const request = req.params;
+    console.log('msw 내부 요청 받았음!');
+    console.log('request: ', request.condition);
+    console.log('req', req);
+    if (request.condition === 'all') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockVoteList));
+    } else if (request.condition === 'inProgress') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockSortedInProgress));
+    } else if (request.condition === 'terminate') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockSortedTerminate));
+    }
+  }),
+  rest.get('/api/topics/:id', (req, res, ctx) => {
+    const request = req.params;
+    console.log('msw 내부 요청 받았음!');
+    console.log('request: ', request.condition);
+    console.log('req', req);
+    if (request.id === '5') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteImage));
+    } else {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteText1));
+    }
+  }),
+  rest.get('/api/topics/:id/comments', (req, res, ctx) => {
+    const request = req.params;
     console.log('msw 내부 요청 받았음!');
     console.log('request: ', request);
     console.log('req', req);
-
-    return res(ctx.delay(), ctx.status(200), ctx.json(MockVote));
+    return res(ctx.delay(), ctx.status(200), ctx.json(MockAnswer));
+  }),
+  rest.post('/api/topics/:id/comments', (req, res, ctx) => {
+    const request: any = req.body;
+    console.log('msw 내부 요청 받았음!');
+    console.log('request: ', request);
+    console.log('req', req);
+    return res(ctx.delay(), ctx.status(200), ctx.json(MockAnswer));
+  }),
+  rest.patch('/api/topics/:id/comments/:commentId', (req, res, ctx) => {
+    const request: any = req.body;
+    const params = req.params;
+    console.log('msw 내부 요청 받았음!');
+    console.log('request: ', request, params);
+    console.log('req', req);
+    return res(ctx.delay(), ctx.status(200), ctx.json(MockAnswer));
   }),
 ];
