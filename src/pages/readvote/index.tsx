@@ -106,7 +106,7 @@ const ReadVote = () => {
           //   //중복투표
           //   return (
           //     <DupleVoteContainer
-          //       key={idx}
+          //       key={el.id}
           //       id={el.id}
           //       content={el.content}
           //       count={el.totalVote}
@@ -122,7 +122,7 @@ const ReadVote = () => {
           //단일투표
           return (
             <SingleVoteContainer
-              key={idx}
+              key={el.id}
               id={el.id}
               content={el.content}
               count={el.totalVote}
