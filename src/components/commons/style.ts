@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -23,6 +24,9 @@ export const ModalContainer = styled.div`
   justify-content: end;
   border-radius: 10px;
   z-index: 2;
+  @media (max-width: 375px) {
+    width: 90%;
+  }
 `;
 
 export const ModalButtonContainer = styled.div`
@@ -88,4 +92,20 @@ export const LinkCard = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 35%;
+`;
+
+//makeVote
+export const CreateVoteBtn = styled(Link)`
+  color: #4285f4;
+  background-color: white;
+  font-family: 'yg-jalnan' !important;
+  border: none;
+  height: 50px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  text-decoration: none;
 `;

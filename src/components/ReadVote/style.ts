@@ -1,8 +1,21 @@
 import styled from 'styled-components';
 
+interface ImageUrl {
+  src: string | undefined;
+}
+interface Clicked {
+  clicked: boolean;
+}
+interface isVoted {
+  isChangedComponent: boolean;
+}
+
 export const VoteTitleOutLine = styled.div`
   margin-top: 5%;
   margin-bottom: 2%;
+  @media (max-width: 375px) {
+    padding: 10px;
+  }
 `;
 export const TitleContainer = styled.div`
   display: flex;
@@ -12,15 +25,35 @@ export const Title = styled.div`
   margin-left: 2%;
   margin-top: 1%;
   font-weight: bold;
+  @media (max-width: 375px) {
+    margin-top: 7px;
+  }
 `;
 export const ContentContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  @media (max-width: 375px) {
+    display: flex;
+    flex-direction: column;
+    margin: 5px auto;
+  }
 `;
-export const devideDiv = styled.div`
+export const DevideSubtitleDiv = styled.div`
+  display: flex;
+  margin-left: 8%;
+  margin-top: 5px;
+  @media (max-width: 375px) {
+    line-height: 150%;
+    margin-left: 4px;
+  }
+`;
+export const DevideIconDiv = styled.div`
   display: flex;
   margin-left: 8%;
   margin-top: 2%;
+  @media (max-width: 375px) {
+    margin: 35px auto 0 0;
+  }
 `;
 export const ContentInfo = styled.div`
   color: #667085;
@@ -36,33 +69,58 @@ export const CategoryIcon = styled.div`
   height: 1.4rem;
   background: ${(props) => props.color};
   text-align: center;
-  padding: 2%;
+  padding: 4px;
   color: white;
+  margin-right: 3px;
 `;
 export const DdayIcon = styled.div`
   border-radius: 10px;
   width: 4rem;
   height: 1.4rem;
   background: #4285f4;
-  padding: 2%;
+  padding: 4px;
   text-align: center;
   color: white;
 `;
 export const VoteContent = styled.div`
   padding: 2rem 1rem;
   line-height: 2rem;
+  background-color: #fafafa;
+  @media (max-width: 375px) {
+    padding: 15px 10px;
+    background-color: #fafafa;
+    border-radius: 10px;
+  }
+`;
+export const VoteContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 375px) {
+    padding: 10px;
+  }
 `;
 
-export const AddedImage = styled.div`
+export const AddedImageContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: baseline;
-  margin: 2rem 0;
+  align-items: center;
 `;
-
-interface Clicked {
-  clicked: boolean;
-}
+export const AddedImage = styled.div<ImageUrl>`
+  background-image: url(${(props) => props?.src});
+  border-radius: 10px;
+  background-position: center;
+  margin: 10px 0;
+  width: 347px;
+  height: 347px;
+  background-size: cover;
+  @media (max-width: 375px) {
+    margin: 10px;
+    width: 165px;
+    height: 165px;
+  }
+`;
 
 export const SelectTextDuple = styled.div<Clicked>`
   border-style: solid;
@@ -77,9 +135,6 @@ export const SelectTextDuple = styled.div<Clicked>`
   border-color: ${(props) => (props.clicked ? '#4285f4' : 'black')};
 `;
 
-interface isVoted {
-  isTopicVoteItemVoted: boolean;
-}
 export const SelectTextSingle = styled.button<isVoted>`
   width: 100%;
   border-style: solid;
@@ -90,17 +145,18 @@ export const SelectTextSingle = styled.button<isVoted>`
   text-align: center;
   margin-bottom: 0.5rem;
   background-color: ${(props) =>
-    props.isTopicVoteItemVoted ? '#4285f4' : 'white'};
-  color: ${(props) => (props.isTopicVoteItemVoted ? 'white' : 'black')};
+    props.isChangedComponent ? '#4285f4' : 'white'};
+  color: ${(props) => (props.isChangedComponent ? 'white' : 'black')};
 `;
 
-export const buttonContainer = styled.div`
+export const ReadVoteBtnContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 3%;
+  align-items: center;
+  margin: 10px;
 `;
 
-export const button = styled.div`
+export const ReadVoteBtn = styled.div`
   border-color: ${(props) => (props.color ? props.color : 'gray')};
   border-width: 1px;
   border-style: solid;
@@ -108,31 +164,16 @@ export const button = styled.div`
   color: ${(props) => (props.color ? 'white' : 'gray')};
   background-color: ${(props) => props.color};
   padding: 1rem 1.5rem;
-  margin: 0.3rem;
+  margin: 15px 5px 30px 5px;
   cursor: default;
+
+  @media (max-width: 375px) {
+    width: 110px;
+    text-align: center;
+    margin: 20px 5px 35px 5px;
+  }
 `;
 
-export const DupleImgItem = styled.img<Clicked>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(50, 50);
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  margin: 10px;
-  border-radius: 10px;
-  filter: ${(props) => (props.clicked ? 'brightness(60%)' : null)};
-`;
-export const DupleImageContainer = styled.button`
-  width: 18vw;
-  height: 30vh;
-  min-width: 250px;
-  min-height: 200px;
-  position: relative;
-  background: none;
-  border: none;
-`;
 export const SingleImgItem = styled.img`
   position: absolute;
   top: 0;
@@ -147,15 +188,21 @@ export const SingleImgItem = styled.img`
 `;
 
 export const SingleImageContainer = styled.button<isVoted>`
-  width: 18vw;
-  height: 30vh;
+  width: 270px;
+  height: 270px;
   min-width: 250px;
   min-height: 200px;
   position: relative;
   background: none;
   border: none;
   z-index: 1;
-  filter: ${(props) => (props.isTopicVoteItemVoted ? 'brightness(60%)' : null)};
+  filter: ${(props) => (props.isChangedComponent ? 'brightness(60%)' : null)};
+  @media (max-width: 375px) {
+    width: 165px;
+    height: 165px;
+    min-width: 165px;
+    min-height: 165px;
+  }
 `;
 
 export const ImageVoteCount = styled.div`
@@ -164,18 +211,28 @@ export const ImageVoteCount = styled.div`
   left: 80%;
   font-size: 1rem;
   color: white;
-  padding: 0.5rem 0.8rem;
+  padding: 10px;
   background-color: #4285f4;
   opacity: 90%;
   border-radius: 10px;
   z-index: 1;
+  @media (max-width: 375px) {
+    padding: 8px 5px;
+    font-size: 0.8rem;
+  }
+`;
+
+export const AnswerListContainer = styled.div`
+  padding-top: 10px;
+  background-color: #fafafa;
 `;
 
 export const AnswerCard = styled.div`
-  border-bottom: 1px solid #667085;
+  border-bottom: 1px solid #e2e6ee;
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
+  background-color: white;
 `;
 export const AnswerInputContainer = styled.form`
   border-top: 1px solid lightgray;
@@ -184,6 +241,12 @@ export const AnswerInputContainer = styled.form`
   align-items: center;
   margin: 2px 0;
   background-color: #f6f9fe;
+`;
+export const AnswerHeader = styled.p`
+  padding: 30px 0 10px 10px;
+  background-color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
 `;
 export const AnswerInput = styled.input`
   flex: 1;
@@ -206,7 +269,7 @@ export const AnswerUserName = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 11%;
+  width: 90px;
 `;
 export const AnswerLike = styled.div`
   color: #667085;
@@ -219,7 +282,7 @@ export const AnswerContent = styled.div`
   font-size: 1rem;
   line-height: 150%;
 `;
-export const AnswerCardBottom = styled.div`
+export const AnswerCardBottomContainer = styled.div`
   display: flex;
   justify-content: end;
   color: #667085;
@@ -234,17 +297,13 @@ export const AnswerButtons = styled.div`
   margin: 0 0.5rem;
   cursor: default;
 `;
-export const AddAnswerButton = styled.div`
-  font-size: 1rem;
-  text-decoration: underline;
-  cursor: default;
-`;
 
 export const AnswerPageBtns = styled.div`
-  margin: 3rem 1rem;
+  padding: 3rem 1rem;
   font-size: 1rem;
   display: flex;
   justify-content: center;
+  background-color: white;
 `;
 
 export const AnswerPage = styled.div`

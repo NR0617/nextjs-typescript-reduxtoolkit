@@ -37,55 +37,75 @@ const VoteBtn = () => {
     console.log('patch');
   };
   return (
-    <S.buttonContainer>
-      <>
-        {!isAuthor ? (
-          <>
-            <S.button id="votelist" onClick={handleLink} color={'#4285f4'}>
-              목록가기
-            </S.button>
+    <S.ReadVoteBtnContainer>
+      {login ? (
+        <>
+          {!isAuthor ? (
             <>
-              {openModal ? (
-                <ButtonModal
-                  text={askText}
-                  confirmFunc={handlePost}
-                  setOpenModal={setOpenModal}
-                />
-              ) : null}
-            </>
-          </>
-        ) : (
-          <>
-            <>
-              <S.button id="delete" onClick={onClickBtn}>
-                삭제하기
-              </S.button>
-              <>
-                {isClosed ? null : (
-                  <S.button id="patch" onClick={onClickBtn} color={'gray'}>
-                    수정하기
-                  </S.button>
-                )}
-              </>
-              <S.button id="votelist" onClick={handleLink} color={'#4285f4'}>
+              <S.ReadVoteBtn
+                id="votelist"
+                onClick={handleLink}
+                color={'#4285f4'}
+              >
                 목록가기
-              </S.button>
+              </S.ReadVoteBtn>
+              <>
+                {openModal ? (
+                  <ButtonModal
+                    text={askText}
+                    confirmFunc={handlePost}
+                    setOpenModal={setOpenModal}
+                  />
+                ) : null}
+              </>
             </>
+          ) : (
             <>
-              {openModal ? (
-                <ButtonModal
-                  text={askText}
-                  confirmFunc={
-                    apiMethod === 'patch' ? handlePatch : handleDelete
-                  }
-                  setOpenModal={setOpenModal}
-                />
-              ) : null}
+              <>
+                <S.ReadVoteBtn id="delete" onClick={onClickBtn}>
+                  삭제하기
+                </S.ReadVoteBtn>
+                <>
+                  {isClosed ? null : (
+                    <S.ReadVoteBtn
+                      id="patch"
+                      onClick={onClickBtn}
+                      color={'gray'}
+                    >
+                      수정하기
+                    </S.ReadVoteBtn>
+                  )}
+                </>
+                <S.ReadVoteBtn
+                  id="votelist"
+                  onClick={handleLink}
+                  color={'#4285f4'}
+                >
+                  목록가기
+                </S.ReadVoteBtn>
+              </>
+              <>
+                {openModal ? (
+                  <ButtonModal
+                    text={askText}
+                    confirmFunc={
+                      apiMethod === 'patch' ? handlePatch : handleDelete
+                    }
+                    setOpenModal={setOpenModal}
+                  />
+                ) : null}
+              </>
             </>
-          </>
-        )}
-      </>
-    </S.buttonContainer>
+          )}
+        </>
+      ) : (
+        <>
+          <S.ReadVoteBtn id="votelist" onClick={handleLink} color={'#4285f4'}>
+            목록가기
+          </S.ReadVoteBtn>
+        </>
+      )}
+    </S.ReadVoteBtnContainer>
   );
 };
 

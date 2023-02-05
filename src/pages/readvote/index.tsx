@@ -3,7 +3,6 @@ import * as S from './style';
 import VoteTitle from '../../components/ReadVote/voteTitle';
 import VoteContent from '../../components/ReadVote/voteContent';
 import AnswerList from '../../components/ReadVote/answerList';
-//import { DupleVoteContainer } from '../../components/ReadVote/dupleVoteContainer';
 import { SingleVoteContainer } from '../../components/ReadVote/singleVoteContainer';
 import { useRouter } from 'next/router';
 import VoteBtn from '../../components/ReadVote/voteBtn';
@@ -24,6 +23,7 @@ interface stateType {
   vote: {
     isAuthor: boolean;
     isVoted: boolean;
+    bestItem: number;
     topicVoteItems: { content: string; totalVote: number }[];
   };
   closedAt: any;
@@ -49,10 +49,6 @@ const ReadVote = () => {
   const [selectedBtn, setSelectedBtn] = useState<number[]>([]);
   const [totalCount, setTotalCount] = useState<number>(1);
 
-  // redux
-  // const testttt = useSelector((state: any) => state.createVote);
-  // console.log('여기입니다', testttt);
-
   const handleSelectedBtn = useCallback((array: any) => {
     setSelectedBtn(array);
   }, []);
@@ -70,6 +66,7 @@ const ReadVote = () => {
             isAuthor: res.data[0].vote.isAuthor,
             isVoted: res.data[0].vote.isVoted,
             isClosed: res.data[0].closed,
+            bestItem: res.data[0].vote.bestItem,
           }),
         );
       } catch (e) {
@@ -77,9 +74,16 @@ const ReadVote = () => {
       }
     });
   }, [pid]);
-  const displayStyle = useMemo((): any => {
+  // redux
+  const { isClosed, isAuthor } = useSelector((state: any) => state.currentVote);
+  console.log(isClosed, isAuthor);
+  const displayStyle = useMemo((): object => {
     if (data?.voteType === 'text') {
-      return;
+      return {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: '10px 10px 0px 10px',
+      };
     } else {
       return { display: 'flex', flexWrap: 'wrap', justifyContent: 'center' };
     }
@@ -87,9 +91,9 @@ const ReadVote = () => {
 
   return (
     <S.PageContainer>
-      <p>
+      <S.CurrentCategoty>
         홈{' > '}카테고리{' > '}게시글
-      </p>
+      </S.CurrentCategoty>
       <VoteTitle
         category={data?.category}
         title={data?.title}
@@ -101,24 +105,7 @@ const ReadVote = () => {
       />
       <VoteContent content={data?.content} image={data?.image} />
       <div style={displayStyle}>
-        {voteBtns?.map((el, idx) => {
-          // if (data?.duplicate) {
-          //   //중복투표
-          //   return (
-          //     <DupleVoteContainer
-          //       key={el.id}
-          //       id={el.id}
-          //       content={el.content}
-          //       count={el.totalVote}
-          //       selectedBtn={selectedBtn}
-          //       duplicate={data?.duplicate}
-          //       handleSelectedBtn={handleSelectedBtn}
-          //       voteType={data?.voteType}
-          //       totalCount={totalCount}
-          //       // isTopicVoteItemVoted={el.isTopicVoteItemVoted}
-          //     />
-          //   );
-          // } else {
+        {voteBtns?.map((el) => {
           //단일투표
           return (
             <SingleVoteContainer
@@ -134,11 +121,10 @@ const ReadVote = () => {
               isTopicVoteItemVoted={el.isTopicVoteItemVoted}
             />
           );
-          // }
         })}
       </div>
-      <S.TotalVoteCount>
-        {data?.closed ? '총투표수: ' + totalCount + '표' : null}
+      <S.TotalVoteCount isClosed={isClosed}>
+        {isClosed && isAuthor ? '총투표수: ' + totalCount + '표' : null}
       </S.TotalVoteCount>
       <VoteBtn />
       <AnswerList id={pid} />

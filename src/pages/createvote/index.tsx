@@ -14,27 +14,32 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 
 //datepicker
 
-import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css";
-import {useRouter} from 'next/router'
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useRouter } from 'next/router';
 
-
+export interface topicVoteItem {
+    topicVoteItemName : string;
+  }
 export interface Inputs {
   category: String;
   title: String;
   content?: String;
-  voteRule: String;
-  topicVoteItems: any[];
+  topicVoteItems: topicVoteItem[];
   closedAt: String;
 }
 
 function createvote() {
-
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const router = useRouter();
-  const [sumbmitData, setSubmitData] = useState<Inputs>()
-  const { register, handleSubmit, watch, control, formState: {isSubmitting, errors} } = useForm<Inputs>({
-
+  const [sumbmitData, setSubmitData] = useState<Inputs>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { isSubmitting, errors },
+  } = useForm<Inputs>({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -43,24 +48,25 @@ function createvote() {
   });
   //cancle
   const onHandleCancle = () => {
-    if(confirm('정말 취소하시겠습니까?')){
-      router.push('/')
-    }else{
-      console.log()
+    if (confirm('정말 취소하시겠습니까?')) {
+      router.push('/');
+    } else {
+      console.log();
     }
-  }
+  };
   //submit
   const onHandleSubmit: SubmitHandler<Inputs> = (data) => {
-
-    console.log('data : ', data)
-    setSubmitData(data)
-  }
-  useEffect(()=>{
+    console.log('data : ', data);
+    setSubmitData(data);
+  };
+  useEffect(() => {
     axios
       .post('/api/topics', {
         headers: {
           'Access-Control-Allow-Origin': '*',
           // 'ngrok-skip-browser-warning': 'any',
+          Authorization: `${localStorage.getItem("Authorization")}`,
+          "Content-Type": "application/json",
         },
       })
       .then((res: AxiosResponse) => {
@@ -69,12 +75,12 @@ function createvote() {
       .catch((err: AxiosError) => {
         console.log('요청 실패!', err.message);
       });
-        // const response = await axios.post('http://localhost:3000/api/topics');
-        // console.log(response)
-      //   return response.data;
-      dispatch(createData(sumbmitData))
-  },[])
-  
+    // const response = await axios.post('http://localhost:3000/api/topics');
+    // console.log(response)
+    //   return response.data;
+    dispatch(createData(sumbmitData));
+  }, []);
+
   //category
   const [categoryMsg, setCategoryMsg] = useState<string>('');
   useEffect(() => {
@@ -161,13 +167,13 @@ function createvote() {
   const [startDate, setStartDate] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
   const [deadLineMsg, setDeadLineMsg] = useState<string>('');
-  useEffect(()=>{
-    if(startDate === new Date() || errors.closedAt?.message){
-      setDeadLineMsg('마감일자를 선택해주세요.')
-    }else{
-      setDeadLineMsg('')
+  useEffect(() => {
+    if (startDate === new Date() || errors.closedAt?.message) {
+      setDeadLineMsg('마감일자를 선택해주세요.');
+    } else {
+      setDeadLineMsg('');
     }
-  },[watch('closedAt')])
+  }, [watch('closedAt')]);
 
   return (
     <S.CreateContainer>
@@ -179,10 +185,15 @@ function createvote() {
           카테고리<span>*</span>
         </S.CategoryTitle>
 
-        <S.Select defaultValue='' {...register(`category`, {
-          required: '카테고리를 선택해주세요.'
-        })}>
-          <option value='' disabled hidden>==선택==</option>
+        <S.Select
+          defaultValue=""
+          {...register(`category`, {
+            required: '카테고리를 선택해주세요.',
+          })}
+        >
+          <option value="" disabled hidden>
+            ==선택==
+          </option>
 
           <option value="음식">음식</option>
           <option value="패션뷰티">패션/뷰티</option>
@@ -192,11 +203,11 @@ function createvote() {
           <option value="일반">일반</option>
         </S.Select>
         {(watch('category') && errors.category?.message && categoryMsg) ||
-
-          categoryMsg === '카테고리를 선택해주세요.' ? (
-            <S.CategoryErrorMessage>{categoryMsg}</S.CategoryErrorMessage>
-          ) :(<S.CategoryErrorMessage>{categoryMsg}</S.CategoryErrorMessage>)
-        }
+        categoryMsg === '카테고리를 선택해주세요.' ? (
+          <S.CategoryErrorMessage>{categoryMsg}</S.CategoryErrorMessage>
+        ) : (
+          <S.CategoryErrorMessage>{categoryMsg}</S.CategoryErrorMessage>
+        )}
 
         <S.Hr />
 
@@ -319,10 +330,10 @@ function createvote() {
         </div>
 
         {/* 단일투표/ 중복투표 */}
-        <S.CategoryTitle>
+        {/* <S.CategoryTitle>
           단일투표와 중복투표 여부를 선택해주세요.<span>*</span>
-        </S.CategoryTitle>
-        <S.Radio>
+        </S.CategoryTitle> */}
+        {/* <S.Radio>
           <div>
             <input
               type="radio"
@@ -336,7 +347,7 @@ function createvote() {
             <input type="radio" value="중복 투표" {...register('voteRule')} />
             중복 투표
           </div>
-        </S.Radio>
+        </S.Radio> */}
 
         {/* 투표 종료 날짜, 시간 */}
         <S.CategoryTitle>
@@ -369,10 +380,11 @@ function createvote() {
           )}
         />
         {(watch('closedAt') && errors.closedAt?.message && deadLineMsg) ||
-          deadLineMsg === '마감일자를 선택해주세요.' ? (
-            <S.CategoryErrorMessage>{deadLineMsg}</S.CategoryErrorMessage>
-          ) :(<S.CategoryErrorMessage>{deadLineMsg}</S.CategoryErrorMessage>)
-        }
+        deadLineMsg === '마감일자를 선택해주세요.' ? (
+          <S.CategoryErrorMessage>{deadLineMsg}</S.CategoryErrorMessage>
+        ) : (
+          <S.CategoryErrorMessage>{deadLineMsg}</S.CategoryErrorMessage>
+        )}
         <S.Warning>
           <div>
             <span>*</span>
@@ -384,10 +396,10 @@ function createvote() {
           </div>
         </S.Warning>
         <S.Btns>
-
           <S.Cancle onClick={onHandleCancle}>취소하기</S.Cancle>
-          <S.Submit type='submit' disabled={isSubmitting}>등록하기</S.Submit>
-
+          <S.Submit type="submit" disabled={isSubmitting}>
+            등록하기
+          </S.Submit>
         </S.Btns>
       </form>
     </S.CreateContainer>

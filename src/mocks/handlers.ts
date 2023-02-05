@@ -10,12 +10,16 @@ import {
   mockReadVoteText2,
   mockReadVoteText3,
   mockReadVoteText4,
-  mockReadVoteImage,
+  mockReadVoteText5,
+  mockReadVoteImage1,
+  mockReadVoteImage2,
+  mockContinueList,
   mockAnswer,
+  mockDeadLineList
 } from './data';
 
 let MockUsers = [...mockUsers];
-let MockVote = [...mockVote];
+let MockVote = { ...mockVote };
 let MockVoteList = [...mockVoteList];
 let MockSortedInProgress = [...mockSortedInProgress];
 let MockSortedTerminate = [...mockSortedTerminate];
@@ -23,11 +27,14 @@ let MockReadVoteText1 = [...mockReadVoteText1];
 let MockReadVoteText2 = [...mockReadVoteText2];
 let MockReadVoteText3 = [...mockReadVoteText3];
 let MockReadVoteText4 = [...mockReadVoteText4];
-let MockReadVoteImage = [...mockReadVoteImage];
+let MockReadVoteText5 = [...mockReadVoteText5];
+let MockReadVoteImage1 = [...mockReadVoteImage1];
+let MockReadVoteImage2 = [...mockReadVoteImage2];
 let MockAnswer = [...mockAnswer];
-
+let MockContinueList = {...mockContinueList};
+let MockDeadLineList = { ...mockDeadLineList };
 console.log(MockUsers);
-console.log(MockVote);
+console.log(MockDeadLineList);
 
 interface UserInfo {
   email?: string;
@@ -39,6 +46,15 @@ interface VoteList {
   totalPage?: number;
   currentPage?: number;
   data?: Object[];
+}
+
+interface ContinueVoteList {
+  topics: {
+    category: string;
+    title: string;
+    author: string;
+    closedAt: string;
+  };
 }
 
 export const handlers = [
@@ -141,11 +157,10 @@ export const handlers = [
   }),
   // Vote 투표 작성 보내기
   rest.post('/api/topics', (req, res, ctx) => {
-    const voteData:any = req.body;
+    const voteData: any = req.body;
     console.log('msw 내부 요청 받았음!');
     console.log('voteData: ', voteData);
     console.log('req', req);
-    MockVote.push(voteData);
 
     return res(ctx.delay(), ctx.status(200), ctx.json(MockVote));
   }),
@@ -160,6 +175,8 @@ export const handlers = [
       return res(ctx.delay(), ctx.status(200), ctx.json(MockSortedInProgress));
     } else if (request.condition === 'terminate') {
       return res(ctx.delay(), ctx.status(200), ctx.json(MockSortedTerminate));
+    } else {
+      return;
     }
   }),
   rest.get('/api/topics/:id', (req, res, ctx) => {
@@ -168,9 +185,19 @@ export const handlers = [
     console.log('request: ', request.condition);
     console.log('req', req);
     if (request.id === '5') {
-      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteImage));
-    } else {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteImage1));
+    } else if (request.id === '1') {
       return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteText1));
+    } else if (request.id === '2') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteText2));
+    } else if (request.id === '3') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteText3));
+    } else if (request.id === '4') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteImage2));
+    } else if (request.id === '6') {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteText4));
+    } else {
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockReadVoteText5));
     }
   }),
   rest.get('/api/topics/:id/comments', (req, res, ctx) => {
@@ -195,4 +222,25 @@ export const handlers = [
     console.log('req', req);
     return res(ctx.delay(), ctx.status(200), ctx.json(MockAnswer));
   }),
+  //메인페이지
+  rest.get<ContinueVoteList>(
+    '/api/topics?size=6&page=1&filter=progress',
+    (req, res, ctx) => {
+      const request = req.params;
+      // console.log('msw 내부 요청 받았음!');
+      // console.log('request: ', request.condition);
+      // console.log('req', req);
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockContinueList));
+    },
+  ),
+  rest.get(
+    '/api/topics?size=4&page=1&filter=imminent',
+    (req, res, ctx) => {
+      const request = req.params;
+      // console.log('msw 내부 요청 받았음!');
+      // console.log('request: ', request.condition);
+      // console.log('req', req);
+      return res(ctx.delay(), ctx.status(200), ctx.json(MockDeadLineList));
+    },
+  ),
 ];
