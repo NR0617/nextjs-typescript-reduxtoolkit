@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-
 interface ImageUrl {
-  src: string | undefined;
+  src: string | undefined | null;
 }
 interface Clicked {
   clicked: boolean;
 }
+
 interface isVoted {
   isChangedComponent: boolean;
 }
-
 export const VoteTitleOutLine = styled.div`
   margin-top: 5%;
   margin-bottom: 2%;
@@ -83,6 +82,7 @@ export const DdayIcon = styled.div`
   color: white;
 `;
 export const VoteContent = styled.div`
+  width: 100%;
   padding: 2rem 1rem;
   line-height: 2rem;
   background-color: #fafafa;
@@ -174,6 +174,27 @@ export const ReadVoteBtn = styled.div`
   }
 `;
 
+export const DupleImgItem = styled.img<Clicked>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50, 50);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 10px;
+  border-radius: 10px;
+  filter: ${(props) => (props.clicked ? 'brightness(60%)' : null)};
+`;
+export const DupleImageContainer = styled.button`
+  width: 270px;
+  height: 270px;
+  min-width: 250px;
+  min-height: 200px;
+  position: relative;
+  background: none;
+  border: none;
+`;
 export const SingleImgItem = styled.img`
   position: absolute;
   top: 0;

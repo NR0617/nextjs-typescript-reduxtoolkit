@@ -24,19 +24,26 @@ export const PageContainer = styled.div`
   }
 `;
 export const Sidebar = styled.div`
-  min-width: 200px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   padding: 0.3rem;
+  margin-right: 50px;
   @media (max-width: 768px) {
     display: none;
   }
 `;
 export const Pagename = styled.p`
+  height: 70px;
   font-size: 2rem;
   color: #667085;
   font-family: 'yg-jalnan' !important;
-  margin: 3rem 0 1rem 0.3rem;
+  margin: 45px 0 10px 4px;
+  line-height: 40px;
+`;
+export const SidebarLink = styled(Link)`
+  text-decoration: none;
+  color: black;
 `;
 export const SidebarCategory = styled.p`
   font-size: 1.3rem;
@@ -45,12 +52,13 @@ export const SidebarCategory = styled.p`
   padding: 1rem;
   border-bottom: 1px solid lightgray;
   margin-bottom: 1rem;
-  margin-top: 4rem;
+  margin-top: 30px;
 `;
 export const CategoryTitle = styled.p`
   color: #667085;
   margin-top: 0.5rem;
   padding-left: 1rem;
+  line-height: 30px;
 `;
 export const PageLink = styled(Link)`
   display: flex;
@@ -59,10 +67,12 @@ export const PageLink = styled(Link)`
 
 export const PageHeader = styled.div`
   display: flex;
+  height: 135px;
   justify-content: space-between;
-  padding-top: 20%;
+  padding-top: 68px;
   color: #667085;
-  @media (max-width: 1230px) {
+  margin-bottom: 90px;
+  @media (max-width: 768px) {
     flex-direction: column;
     padding-top: 10%;
   }
