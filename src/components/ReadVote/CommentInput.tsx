@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as S from './style';
-import { AnswerSubmit } from '../../assets/answerSubmit';
-import axios from 'axios';
+import { CommentSubmit } from '../../assets/commentSubmit';
+import { postComment } from '../../apis/comments';
+// import axios from 'axios';
 
 interface Inputs {
   answer: string;
 }
+interface Props {
+  commendId: number;
+  totalLike: number;
+  createdAt: string;
+  memberId: number;
+  commentStatus: string;
+  commentContent: string;
+}
+interface propsType {
+  topicId: string;
+}
 
-const AnswerInput = ({ id, setData }: any) => {
+const CommentInput = ({ topicId }: propsType) => {
+  console.log(topicId);
   const {
     register,
     handleSubmit,
@@ -21,27 +34,16 @@ const AnswerInput = ({ id, setData }: any) => {
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    let request = {
-      id: 6,
-      like: 11,
-      created_at: '2023-02-30 11:21:21',
-      username: 'DAMONG',
-      status: 'ACTIVE',
-      content: data.answer,
-    };
-    axios.post(`/api/topics/${String(id)}/comments`, request).then(() => {
-      setData((prev: any) => [...prev, request]);
-    });
+    console.log(data.answer);
+    postComment(topicId, data.answer);
     alert('댓글이 작성되었습니다');
     reset({ answer: '' });
   };
 
-  //console.log(errors.answer?.message);
-  console.log(watch('answer'));
   return (
     <>
-      <S.AnswerInputContainer onSubmit={handleSubmit(onSubmit)}>
-        <S.AnswerInput
+      <S.CommentInputContainer onSubmit={handleSubmit(onSubmit)}>
+        <S.CommentInput
           {...register('answer', {
             required: '글자를 입력하세요',
             maxLength: {
@@ -53,11 +55,10 @@ const AnswerInput = ({ id, setData }: any) => {
         />
         <input type="submit" id="btnSubmit" style={{ display: 'none' }} />
         <label htmlFor="btnSubmit">
-          <AnswerSubmit />
+          <CommentSubmit />
         </label>
-      </S.AnswerInputContainer>
-      {/* <p>{errors.answer?.message}</p> */}
+      </S.CommentInputContainer>
     </>
   );
 };
-export default AnswerInput;
+export default CommentInput;

@@ -5,16 +5,16 @@ import CardItem from '../../components/VoteList/CardItem';
 import { conditions } from '../../constants/conditions';
 
 interface props {
-  data: {
-    category: string;
-    closedAt: string;
-    createdAt: string;
-    nickName: string;
-    title: string;
-    topicId: number;
-  };
-  id: number;
-  pageInfo: any;
+  // data: {
+  category: string;
+  closedAt: string;
+  createdAt: string;
+  nickName: string;
+  title: string;
+  topicId: number;
+  // };
+  // id: number;
+  // pageInfo: any;
 }
 interface propsArray {
   data: props[];
@@ -28,6 +28,7 @@ const ListPage = ({ data, totalPage, setPage, condition }: propsArray) => {
   const handlePage = (e: any) => {
     setPage(e.target.textContent);
   };
+  console.log(data);
   return (
     <S.VoteList>
       <S.PageHeader>
@@ -42,7 +43,7 @@ const ListPage = ({ data, totalPage, setPage, condition }: propsArray) => {
         </S.PageLink>
       </S.PageHeader>
       {data?.map((el) => {
-        return <CardItem key={el.id} prop={el.data} />;
+        return <CardItem key={el.topicId} prop={el} />;
       })}
       <S.pageNum>
         {page.map((el) => (

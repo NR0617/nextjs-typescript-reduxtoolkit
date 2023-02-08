@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import * as S from './style';
 import VoteTitle from '../../components/ReadVote/voteTitle';
 import VoteContent from '../../components/ReadVote/voteContent';
-import AnswerList from '../../components/ReadVote/answerList';
+import CommentList from '../../components/ReadVote/CommentList';
 import { SingleVoteContainer } from '../../components/ReadVote/singleVoteContainer';
 import { useRouter } from 'next/router';
 import VoteBtn from '../../components/ReadVote/voteBtn';
@@ -37,7 +37,7 @@ interface stateType {
 interface voteType {
   topicVoteItemName: string;
   totalVote: number;
-  id: number;
+  topicVoteItemId: number;
   isTopicVoteItemVoted: boolean;
   numberOfVotes: number;
 }
@@ -48,33 +48,33 @@ const ReadVote = () => {
   const [data, setData] = useState<stateType>();
   const [voteBtns, setVoteBtns] = useState<voteType[]>();
   const [selectedBtn, setSelectedBtn] = useState<number[]>([]);
-  const [totalCount, setTotalCount] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<number>(20);
 
   const handleSelectedBtn = useCallback((array: any) => {
     setSelectedBtn(array);
   }, []);
-
   //api요청
   useEffect(() => {
-    if (!pid) return;
-    getReadVote(Number(pid))?.then((res) => {
-      console.log(res, 'pid', pid);
-      setData(res.data);
-      setVoteBtns([...res.data.topicVoteItems]);
-      setTotalCount(CalcTotal(res.data.topicVoteItems));
-      dispatch(
-        getCurrent({
-          isAuthor: res.data.isAuthor,
-          isVoted: res.data.isVoted,
-          isClosed: res.data.closed,
-          bestItem: res.data.bestItem,
-        }),
-      );
-    });
+    console.log(pid);
+    if (!!pid) {
+      getReadVote(pid)?.then((res) => {
+        console.log(res.data);
+        setData({ ...res.data });
+        setVoteBtns([...res.data.topicVoteItems]);
+        setTotalCount(CalcTotal(res.data.topicVoteItems));
+        dispatch(
+          getCurrent({
+            isAuthor: res.data.isAuthor,
+            isVoted: res.data.isVoted,
+            isClosed: res.data.closed,
+            bestItem: res.data.bestItem,
+          }),
+        );
+      });
+    }
   }, [pid]);
   // redux
   const { isClosed, isAuthor } = useSelector((state: any) => state.currentVote);
-  console.log(isClosed, isAuthor);
   const displayStyle = useMemo((): object => {
     if (data) {
       return {
@@ -90,7 +90,8 @@ const ReadVote = () => {
   return (
     <S.PageContainer>
       <S.CurrentCategoty>
-        홈{' > '}카테고리{' > '}게시글
+        <S.LinkButton href="/">홈</S.LinkButton>
+        {' > '}카테고리{' > '}게시글
       </S.CurrentCategoty>
       <VoteTitle
         category={data?.category}
@@ -101,33 +102,35 @@ const ReadVote = () => {
         views={data?.views}
         likes={data?.likes}
       />
-      {!data?.image ? (
-        <VoteContent content={data?.content} image={null} />
-      ) : (
-        <VoteContent content={data?.content} image={data?.image} />
-      )}
+      <S.VoteContentLayout>
+        {!data?.image ? (
+          <VoteContent content={data?.content} image={null} />
+        ) : (
+          <VoteContent content={data?.content} image={data?.image} />
+        )}
 
-      <div style={displayStyle}>
-        {voteBtns?.map((el) => {
-          return (
-            <SingleVoteContainer
-              key={el.id}
-              id={el.id}
-              content={el.topicVoteItemName}
-              count={el.numberOfVotes}
-              selectedBtn={selectedBtn}
-              handleSelectedBtn={handleSelectedBtn}
-              totalCount={totalCount}
-              isTopicVoteItemVoted={el.isTopicVoteItemVoted}
-            />
-          );
-        })}
-      </div>
-      <S.TotalVoteCount isClosed={isClosed}>
-        {isClosed && isAuthor ? '총투표수: ' + totalCount + '표' : null}
-      </S.TotalVoteCount>
-      <VoteBtn />
-      <AnswerList id={pid} />
+        <div style={displayStyle}>
+          {voteBtns?.map((el) => {
+            return (
+              <SingleVoteContainer
+                key={el.topicVoteItemId}
+                id={el.topicVoteItemId}
+                content={el.topicVoteItemName}
+                count={el.numberOfVotes}
+                selectedBtn={selectedBtn}
+                handleSelectedBtn={handleSelectedBtn}
+                totalCount={totalCount}
+                isTopicVoteItemVoted={el.isTopicVoteItemVoted}
+              />
+            );
+          })}
+        </div>
+        <S.TotalVoteCount isClosed={isClosed}>
+          {isClosed && isAuthor ? '총투표수: ' + totalCount + '표' : null}
+        </S.TotalVoteCount>
+        <VoteBtn />
+      </S.VoteContentLayout>
+      <CommentList topicId={pid} />
     </S.PageContainer>
   );
 };

@@ -24,10 +24,11 @@ const VoteList = () => {
   const [size, setSize] = useState(6);
   const [totalPage, setTotalPage] = useState(0);
   useEffect(() => {
-    console.log('api call');
+    console.log('votelist');
     getVoteList(page, size, condition)?.then((res) => {
       setData(res.data);
       setTotalPage(res.pageInfo.totalPages);
+      //console.log(res);
     });
   }, [condition, page]);
 
