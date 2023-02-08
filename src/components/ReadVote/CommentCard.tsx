@@ -5,6 +5,7 @@ import { ProfileImage } from '../../assets/profileImage';
 import { ChangDateFormat } from '../../utils/parseDate';
 import { BestCommentItem } from '../../assets/bestCommentItem';
 import { postCommentLike } from '../../apis/comments';
+import { deleteComment } from '../../apis/comments';
 
 interface propTypes {
   username: number | undefined;
@@ -38,9 +39,12 @@ const CommentCard = ({
     return { color: '#667085' };
   }, []);
   const handleDeleteComment = () => {
-    alert('삭제되었습니다');
-    setDeletedCommentId(commendId);
+    deleteComment(commendId).then(() => {
+      alert('삭제되었습니다');
+      setDeletedCommentId(commendId);
+    });
   };
+
   const handleCommentLike = () => {
     postCommentLike(commendId).then((res) => {
       console.log(res);

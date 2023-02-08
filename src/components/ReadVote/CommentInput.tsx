@@ -8,19 +8,20 @@ import { postComment } from '../../apis/comments';
 interface Inputs {
   answer: string;
 }
-interface Props {
-  commendId: number;
-  totalLike: number;
-  createdAt: string;
-  memberId: number;
-  commentStatus: string;
-  commentContent: string;
-}
+// interface Props {
+//   commendId: number;
+//   totalLike: number;
+//   createdAt: string;
+//   memberId: number;
+//   commentStatus: string;
+//   commentContent: string;
+// }
 interface propsType {
   topicId: string;
+  setIsCreated: Function;
 }
 
-const CommentInput = ({ topicId }: propsType) => {
+const CommentInput = ({ topicId, setIsCreated }: propsType) => {
   console.log(topicId);
   const {
     register,
@@ -34,10 +35,12 @@ const CommentInput = ({ topicId }: propsType) => {
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setIsCreated(true);
     console.log(data.answer);
     postComment(topicId, data.answer);
     alert('댓글이 작성되었습니다');
     reset({ answer: '' });
+    setIsCreated(false);
   };
 
   return (

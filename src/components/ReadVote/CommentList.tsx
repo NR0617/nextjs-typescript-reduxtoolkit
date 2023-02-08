@@ -3,7 +3,6 @@ import CommentInput from './CommentInput';
 import CommentCard from './CommentCard';
 import * as S from './style';
 import { getComments } from '../../apis/comments';
-import { deleteComment } from '../../apis/comments';
 
 interface Props {
   commendId: number;
@@ -21,6 +20,7 @@ const CommentList = ({ topicId }: any) => {
   const [bestComment, setBestComment] = useState<Props>();
   const [totalComments, setTotalComments] = useState(0);
   const [deletedCommentId, setDeletedCommentId] = useState(0);
+  const [isCreated, setIsCreated] = useState(false);
   const [data, setData] = useState<Props[]>();
   const page = Array.from({ length: commentTotalPage }, (_, i) => i + 1);
   const [commentPage, setCommentPage] = useState<number[]>(page);
@@ -33,19 +33,19 @@ const CommentList = ({ topicId }: any) => {
   useEffect(() => {
     getComments(pageNum, pageSize, topicId)?.then((res) => {
       setCommentPage([...page]);
-      console.log(res.data);
+      console.log('여기', res.data);
       setData([...res.data]);
       setBestComment({ ...res.best[0] });
       setCommentTotalPage(res.pageInfo.totalPages);
       setTotalComments(res.pageInfo.totalElements);
     });
-    console.log(deletedCommentId);
-  }, [pageNum, pageSize, topicId, deletedCommentId]);
+    console.log('삭제된아이디', deletedCommentId);
+  }, [pageNum, pageSize, topicId, deletedCommentId, isCreated]);
 
   return (
     <S.CommentListContainer>
       <S.CommentHeader>댓글 ({totalComments})</S.CommentHeader>
-      <CommentInput topicId={topicId} />
+      <CommentInput topicId={topicId} setIsCreated={setIsCreated} />
       <>
         <CommentCard
           index={null}
